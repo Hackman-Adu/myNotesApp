@@ -11,6 +11,7 @@ class DatabaseConnection {
   String dateCol = "noteDate";
   String titleColorCol = "titleColor";
   String titleFontSizeCol = "titleFontSize";
+  String contentFontCol = "contentFont";
   Database database;
   Future<Database> getDatabase() async {
     if (this.database != null) {
@@ -27,7 +28,7 @@ class DatabaseConnection {
     return await openDatabase(databasePath, version: 1,
         onCreate: (db, version) async {
       await db.execute(
-          "CREATE TABLE $table($idCol INTEGER PRIMARY KEY  NOT NULL,$titleCol TEXT,$contentCol TEXT,$dateCol TEXT,$titleColorCol TEXT,$titleFontSizeCol INTEGER)");
+          "CREATE TABLE $table($idCol INTEGER PRIMARY KEY  NOT NULL,$titleCol TEXT,$contentCol TEXT,$dateCol TEXT,$titleColorCol TEXT,$titleFontSizeCol INTEGER,$contentFontCol TEXT)");
     });
   }
 }

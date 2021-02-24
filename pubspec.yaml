@@ -57,17 +57,39 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  fonts:
+    - family: Alice-Regular
+      fonts:
+        - asset: assets/fonts/Alice-Regular.ttf
+    - family: Bentham-Regular
+      fonts:
+        - asset: assets/fonts/Bentham-Regular.ttf
+    - family: Bulletto Killa
+      fonts:
+        - asset: assets/fonts/Bulletto Killa.ttf
+    - family: Gruppo-Regular
+      fonts:
+        - asset: assets/fonts/Gruppo-Regular.ttf
+    - family: Niconne-Regular
+      fonts:
+        - asset: assets/fonts/Niconne-Regular.ttf
+    - family: Pacifico-Regular
+      fonts:
+        - asset: assets/fonts/Pacifico-Regular.ttf
+    - family: Parisienne-Regular
+      fonts:
+        - asset: assets/fonts/Parisienne-Regular.ttf
+    - family: PoiretOne-Regular
+      fonts:
+        - asset: assets/fonts/PoiretOne-Regular.ttf
+    - family: Roboto-Black
+      fonts:
+        - asset: assets/fonts/Roboto-Black.ttf
+    - family: Tangerine-Regular
+      fonts:
+        - asset: assets/fonts/Tangerine-Regular.ttf
+    - family: OpenSans-Light
+      fonts:
+        - asset: assets/fonts/OpenSans-Light.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

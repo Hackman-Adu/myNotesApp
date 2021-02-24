@@ -13,8 +13,9 @@ class ViewNote extends StatefulWidget {
 }
 
 class ViewNoteState extends State<ViewNote> {
-  final Notes selectedNote;
+  Notes selectedNote;
   ViewNoteState({this.selectedNote});
+  var scaffoldKey = new GlobalKey<ScaffoldState>();
 
   TextStyle getStyleFromNote() {
     return TextStyle(
@@ -25,18 +26,26 @@ class ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: this.scaffoldKey,
         appBar: AppBar(
           title: Text("View Note"),
           actions: [
             IconButton(
               splashRadius: 20,
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                Notes editedNote = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => EditNote(
                               noteToEdit: this.selectedNote,
+                              location: "View Note",
                             )));
+                setState(() {
+                  if (editedNote.title != null) {
+                    this.selectedNote = editedNote;
+                  }
+                  Utils.showSnackBar("Note successfully updated", scaffoldKey);
+                });
               },
               icon: Icon(Icons.edit),
             )
@@ -50,7 +59,10 @@ class ViewNoteState extends State<ViewNote> {
               ListTile(
                   isThreeLine: true,
                   subtitle: Text(selectedNote.content,
-                      style: TextStyle(fontSize: 20)),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: selectedNote.contentFont ??
+                              Utils.defaultFontFamily())),
                   title: Padding(
                     padding: EdgeInsets.only(bottom: 10),
                     child: Column(

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noteApp/models/colors.dart';
 import 'package:noteApp/models/notes.dart';
 import 'package:noteApp/controllers/noteController.dart';
+import 'package:noteApp/screens/fontSelection.dart';
 import "package:noteApp/util/utils.dart";
 
 class AddNewNote extends StatefulWidget {
@@ -16,6 +18,7 @@ class AddNewNoteState extends State<AddNewNote> {
   List<NoteColors> colors = NoteColors().getColors();
   Color textColor;
   String titleColor = "";
+  String selectedFontFamily = Utils.defaultFontFamily();
   NoteColors selectedColor;
   double fontSize = 20.0;
   Notes note = new Notes();
@@ -27,12 +30,12 @@ class AddNewNoteState extends State<AddNewNote> {
     if (this.formKey.currentState.validate()) {
       print(this.getNoteDate());
       this.formKey.currentState.save();
+      this.note.contentFont = this.selectedFontFamily;
       this.note.noteID = this.getNoteID();
       this.note.noteDate = this.getNoteDate();
       this.note.titleColor = this.titleColor;
       this.note.titleFontSize = int.parse(this.fontSize.round().toString());
       NotesController().insertNote(this.note).then((value) {
-        Utils.showSnackBar("Note successfully saved", this.scaffoldKey);
         Navigator.of(context).pop(this.note);
       }).catchError((err) {
         Utils.showSnackBar(
@@ -51,41 +54,6 @@ class AddNewNoteState extends State<AddNewNote> {
   String getNoteDate() {
     var date = DateTime.now();
     return date.toString();
-  }
-
-//alert user on unsaved note when leaving the page
-  Future<bool> saveNotBeforeLeavingPage(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Note Not Saved"),
-            content: Text("Do you want to save this note?"),
-            actions: [
-              FlatButton(
-                onPressed: () {
-                  NotesController().insertNote(note).then((value) {
-                    Navigator.of(context).pop(true);
-                  });
-                },
-                child: Text("Yes"),
-              ),
-              FlatButton(
-                onPressed: () {
-                  this.note.title = '';
-                  Navigator.of(context).pop(true);
-                },
-                child: Text("No,leave page"),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: Text("Cancel"),
-              ),
-            ],
-          );
-        });
   }
 
 //showing the change font size dialog alert
@@ -193,6 +161,87 @@ class AddNewNoteState extends State<AddNewNote> {
         });
   }
 
+//build formatting toolbar
+  Widget titleFormattingToolBar() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 7),
+      color: Color(0xff5AC18E),
+      width: double.infinity,
+      child: Row(
+        children: [
+          IconButton(
+            splashRadius: 17,
+            onPressed: () async {
+              var v = await this.changeFontSize(context);
+              setState(() {
+                this.fontSize = v;
+              });
+            },
+            icon: Icon(
+              Icons.text_fields,
+              size: 30,
+            ),
+          ),
+          Container(
+              height: 20,
+              width: 20,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.circle),
+              child: Center(
+                child: Text(
+                  this.fontSize.round().toString(),
+                  style: TextStyle(fontSize: 11, color: Colors.white),
+                ),
+              )),
+          SizedBox(width: 25),
+          IconButton(
+            splashRadius: 17,
+            onPressed: () {
+              this.changeFontColor(context);
+            },
+            icon: Icon(
+              Icons.format_color_fill,
+              size: 30,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+//build contentToolBar
+
+  Widget contentToolBar() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 7),
+      color: Color(0xff5AC18E),
+      width: double.infinity,
+      child: Row(
+        children: [
+          IconButton(
+            splashRadius: 17,
+            onPressed: () async {
+              var family = await Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => SelectFont(
+                            previousFontFamily: this.selectedFontFamily,
+                          )));
+              setState(() {
+                this.selectedFontFamily = family ?? Utils.defaultFontFamily();
+              });
+            },
+            icon: Icon(
+              Icons.text_format,
+              size: 30,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 //overriding the initState method from the State
   @override
   void initState() {
@@ -226,51 +275,14 @@ class AddNewNoteState extends State<AddNewNote> {
                       key: this.formKey,
                       child: Column(
                         children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 7),
-                            color: Color(0xff5AC18E),
-                            width: double.infinity,
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  splashRadius: 17,
-                                  onPressed: () async {
-                                    var v = await this.changeFontSize(context);
-                                    setState(() {
-                                      this.fontSize = v;
-                                    });
-                                  },
-                                  icon: Icon(Icons.text_fields),
-                                ),
-                                Container(
-                                    height: 25,
-                                    width: 25,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context).primaryColor,
-                                        shape: BoxShape.circle),
-                                    child: Center(
-                                      child: Text(
-                                        this.fontSize.round().toString(),
-                                        style: TextStyle(
-                                            fontSize: 13, color: Colors.white),
-                                      ),
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                IconButton(
-                                  splashRadius: 17,
-                                  onPressed: () {
-                                    this.changeFontColor(context);
-                                  },
-                                  icon: Icon(Icons.format_color_fill),
-                                ),
-                              ],
-                            ),
+                          this.titleFormattingToolBar(),
+                          SizedBox(
+                            height: 17,
                           ),
                           Padding(
                               padding: EdgeInsets.only(
-                                  bottom: 10, right: 20, left: 20, top: 20),
+                                bottom: 10,
+                              ),
                               child: TextFormField(
                                 maxLines: null,
                                 maxLength: 30,
@@ -289,8 +301,10 @@ class AddNewNoteState extends State<AddNewNote> {
                                 },
                                 style: TextStyle(
                                     fontSize: this.fontSize,
+                                    fontFamily: Utils.defaultFontFamily(),
                                     color: this.textColor),
                                 decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(15),
                                     labelText: "Note title",
                                     labelStyle: TextStyle(
                                         color: Colors.white.withOpacity(0.85)),
@@ -299,9 +313,12 @@ class AddNewNoteState extends State<AddNewNote> {
                           SizedBox(
                             height: 43,
                           ),
+                          this.contentToolBar(),
+                          SizedBox(
+                            height: 17,
+                          ),
                           Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: 10, right: 20, left: 20),
+                              padding: EdgeInsets.only(bottom: 10),
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -320,10 +337,13 @@ class AddNewNoteState extends State<AddNewNote> {
                                 keyboardType: TextInputType.multiline,
                                 style: TextStyle(
                                     fontSize: 20,
+                                    fontFamily: this.selectedFontFamily,
                                     color: Colors.white.withOpacity(0.85)),
                                 decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(15),
                                     labelText: "Note content",
                                     labelStyle: TextStyle(
+                                        fontFamily: Utils.defaultFontFamily(),
                                         color: Colors.white.withOpacity(0.85)),
                                     hintText: "Note content"),
                               )),

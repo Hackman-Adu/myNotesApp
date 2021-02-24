@@ -35,8 +35,8 @@ class SplashScreenState extends State<SplasScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "MY NOTES",
-                style: TextStyle(fontSize: 33),
+                "My Notes",
+                style: TextStyle(fontSize: 50, fontFamily: "Bulletto Killa"),
               ),
               SizedBox(height: 40),
               CircularProgressIndicator(

@@ -25,7 +25,7 @@ class NotesController {
   Future<int> updateNote(int noteID, Notes note) async {
     var database = await DatabaseConnection().getDatabase();
     return database.update(DatabaseConnection().table, note.toJSON(),
-        where: "noteID=?", whereArgs: [noteID]);
+        where: "${DatabaseConnection().idCol}=?", whereArgs: [noteID]);
   }
 
   //delete note by ID
