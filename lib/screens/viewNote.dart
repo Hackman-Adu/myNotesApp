@@ -26,6 +26,7 @@ class ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
         key: this.scaffoldKey,
         appBar: AppBar(
           title: Text("View Note"),

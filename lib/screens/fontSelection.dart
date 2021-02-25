@@ -20,39 +20,40 @@ class SelectFontState extends State<SelectFont> {
       appBar: AppBar(
         title: Text("Select Font"),
       ),
-      body: ListView(
-        children: [
-          ...this.fonts.map((font) {
-            return Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: ListTile(
-                  trailing: this.previousFontFamily == font.family
-                      ? Container(
-                          height: 30,
-                          width: 30,
-                          child: Center(
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                              color: Colors.greenAccent,
-                              shape: BoxShape.circle),
-                        )
-                      : null,
-                  onTap: () {
-                    Navigator.of(context).pop(font.family);
-                  },
-                  title: Text(font.fontName),
-                  subtitle: Text(
-                    "Sample preview",
-                    style: TextStyle(fontSize: 30, fontFamily: font.family),
-                  ),
-                ));
-          }).toList()
-        ],
+      body: ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: 10),
+        itemCount: this.fonts.length,
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+        itemBuilder: (context, index) {
+          var font = this.fonts[index];
+          return ListTile(
+            trailing: this.previousFontFamily == font.family
+                ? Container(
+                    height: 30,
+                    width: 30,
+                    child: Center(
+                      child: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.greenAccent, shape: BoxShape.circle),
+                  )
+                : null,
+            onTap: () {
+              Navigator.of(context).pop(font.family);
+            },
+            title: Text(font.fontName),
+            subtitle: Text(
+              "Sample preview",
+              style: TextStyle(fontSize: 30, fontFamily: font.family),
+            ),
+          );
+        },
       ),
     );
   }

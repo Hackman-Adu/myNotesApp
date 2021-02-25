@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io';
 
 class Utils {
   static int getColor(String colorCode) {
@@ -12,6 +14,56 @@ class Utils {
 
   static String defaultFontFamily() {
     return "OpenSans-Light";
+  }
+
+  static Widget backIcon() {
+    var androidicon = Icon(Icons.arrow_back);
+    var iosIcon = Icon(CupertinoIcons.back);
+    var backIcon = Platform.isAndroid ? androidicon : iosIcon;
+    return backIcon;
+  }
+
+  static Widget showPinnerDialog() {
+    var androidSpinner = CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation(Colors.white),
+    );
+
+    var iOSSpinner = CupertinoActivityIndicator(
+      radius: 15,
+    );
+    var spinner = Platform.isAndroid ? androidSpinner : iOSSpinner;
+    return spinner;
+  }
+
+  static Widget showSlider(value, function) {
+    var androidSlider = Slider(
+      value: value,
+      onChanged: function,
+      min: 20.0,
+      max: 50.0,
+    );
+    var iOSSlider = CupertinoSlider(
+      value: value,
+      onChanged: function,
+      min: 20.0,
+      max: 50.0,
+    );
+    var slider = Platform.isAndroid ? androidSlider : iOSSlider;
+    return slider;
+  }
+
+  static Widget checkBox(value, function) {
+    var androidCheckbox = Checkbox(
+      onChanged: function,
+      value: value,
+    );
+    var iOSCheckbox = CupertinoSwitch(
+      activeColor: Color(0xff5AC18E),
+      value: value,
+      onChanged: function,
+    );
+    var checkbox = Platform.isAndroid ? androidCheckbox : iOSCheckbox;
+    return checkbox;
   }
 
   static void showSnackBar(

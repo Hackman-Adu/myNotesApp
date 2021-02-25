@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:noteApp/screens/home.dart';
+import 'package:noteApp/util/utils.dart';
 
 class SplasScreen extends StatefulWidget {
   @override
@@ -39,9 +40,7 @@ class SplashScreenState extends State<SplasScreen> {
                 style: TextStyle(fontSize: 50, fontFamily: "Bulletto Killa"),
               ),
               SizedBox(height: 40),
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.white),
-              )
+              Utils.showPinnerDialog()
             ],
           )),
     );

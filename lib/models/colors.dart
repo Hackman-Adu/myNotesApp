@@ -14,7 +14,25 @@ class NoteColors {
       NoteColors(colorCodes: "#f6546a"),
       NoteColors(colorCodes: "#00ced1"),
       NoteColors(colorCodes: "#cbcba9"),
-      NoteColors(colorCodes: "#6897bb")
+      NoteColors(colorCodes: "#6897bb"),
+
+      //new colors added
+      NoteColors(colorCodes: "#FF4040"),
+      NoteColors(colorCodes: "#00FF00"),
+      NoteColors(colorCodes: "#FF40FF"),
+      NoteColors(colorCodes: "#0080FF"),
+      NoteColors(colorCodes: "#40FFFF"),
+
+      //new colors added
+      NoteColors(colorCodes: "#40FF40"),
+      NoteColors(colorCodes: "#FF4000"),
+      NoteColors(colorCodes: "#C0FF00"),
+      NoteColors(colorCodes: "#FFFF80"),
+      NoteColors(colorCodes: "#FF8040"),
+
+      NoteColors(colorCodes: "#FFFFFF"),
+      NoteColors(colorCodes: "#ff004d"),
+      NoteColors(colorCodes: "#ff5722")
     ];
   }
 }

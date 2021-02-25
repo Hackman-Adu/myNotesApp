@@ -43,38 +43,63 @@ class EditNoteState extends State<EditNote> {
           return StatefulBuilder(
             builder: (context, setState) {
               return AlertDialog(
-                title: Text(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(17)),
+                title: Center(
+                    child: Text(
                   "Change Font Size",
-                ),
+                )),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Slider(
-                      value: this.fontSize,
-                      min: 20.0,
-                      max: 50,
-                      onChanged: (value) {
+                    Utils.showSlider(
+                      this.fontSize,
+                      (value) {
                         setState(() {
                           this.setState(() {
                             this.fontSize = value;
                           });
                         });
                       },
+                    ),
+                    SizedBox(
+                      height: 17,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: FlatButton(
+                          height: 50,
+                          minWidth: double.infinity,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          color: Color(0xff5AC18E),
+                          textColor: Colors.white,
+                          onPressed: () {
+                            Navigator.of(context).pop(this.fontSize);
+                          },
+                          child: Text("Okay"),
+                        )),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                            child: FlatButton(
+                          height: 50,
+                          minWidth: double.infinity,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          color: Color(0xff5AC18E),
+                          textColor: Colors.white,
+                          onPressed: () {
+                            Navigator.of(context).pop(fSize);
+                          },
+                          child: Text("Default"),
+                        )),
+                      ],
                     )
                   ],
                 ),
-                actions: [
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(this.fontSize);
-                      },
-                      child: Text("Okay")),
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(fSize);
-                      },
-                      child: Text("Default"))
-                ],
               );
             },
           );
@@ -90,49 +115,72 @@ class EditNoteState extends State<EditNote> {
           return StatefulBuilder(
             builder: (context, setState) {
               return AlertDialog(
-                title: Text(
-                  "Change Font Color",
-                  style: TextStyle(
-                      color:
-                          Color(Utils.getColor(this.selectedColor.colorCodes))),
-                ),
-                content: Container(
-                  child: Wrap(
-                    runSpacing: 13,
-                    spacing: 13,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: this.colors.map((color) {
-                      return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = this.colors.indexOf(color);
-                              this.setState(() {
-                                this.titleColor = color.colorCodes;
-                                this.selectedColor = color;
-                                this.textColor =
-                                    Color(Utils.getColor(color.colorCodes));
-                              });
-                            });
-                          },
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            child: Center(
-                              child: selectedIndex == this.colors.indexOf(color)
-                                  ? Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    )
-                                  : Text(''),
-                            ),
-                            decoration: BoxDecoration(
-                                color: Color(Utils.getColor(color.colorCodes)),
-                                shape: BoxShape.circle),
-                          ));
-                    }).toList(),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  title: Text(
+                    "Change Font Color",
+                    style: TextStyle(
+                        color: Color(
+                            Utils.getColor(this.selectedColor.colorCodes))),
                   ),
-                ),
-              );
+                  content: SingleChildScrollView(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Container(
+                      child: Wrap(
+                        runSpacing: 13,
+                        spacing: 13,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: this.colors.map((color) {
+                          return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = this.colors.indexOf(color);
+                                  this.setState(() {
+                                    this.titleColor = color.colorCodes;
+                                    this.selectedColor = color;
+                                    this.textColor =
+                                        Color(Utils.getColor(color.colorCodes));
+                                  });
+                                });
+                              },
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                child: Center(
+                                  child: selectedIndex ==
+                                          this.colors.indexOf(color)
+                                      ? Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        )
+                                      : Text(''),
+                                ),
+                                decoration: BoxDecoration(
+                                    color:
+                                        Color(Utils.getColor(color.colorCodes)),
+                                    shape: BoxShape.circle),
+                              ));
+                        }).toList(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 17,
+                    ),
+                    Center(
+                      child: FlatButton(
+                        height: 50,
+                        minWidth: double.infinity,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        color: Color(0xff5AC18E),
+                        textColor: Colors.white,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Okay"),
+                      ),
+                    )
+                  ])));
             },
           );
         });
@@ -265,6 +313,7 @@ class EditNoteState extends State<EditNote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
         key: this.scaffoldKey,
         appBar: AppBar(
           title: Text("Edit Note"),
@@ -279,8 +328,9 @@ class EditNoteState extends State<EditNote> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Card(
-                    elevation: 25,
-                    shadowColor: Colors.black.withOpacity(0.25),
+                    elevation: 2.5,
+                    color: Theme.of(context).primaryColor,
+                    shadowColor: Colors.white.withOpacity(0.25),
                     child: Form(
                       key: this.formKey,
                       child: Column(

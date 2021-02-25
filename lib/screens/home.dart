@@ -7,6 +7,7 @@ import 'package:noteApp/controllers/noteController.dart';
 import 'package:noteApp/screens/editNote.dart';
 import 'package:noteApp/screens/viewNote.dart';
 import 'package:noteApp/util/utils.dart';
+import 'package:share/share.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -35,22 +36,47 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Close My Notes"),
-            content: Text("Do you want to close the application?"),
-            actions: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: Text("Yes"),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: Text("No"),
-              ),
-            ],
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+            title: Text("Exit Application"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Do you want to close the application?"),
+                SizedBox(height: 17),
+                Row(
+                  children: [
+                    Expanded(
+                        child: FlatButton(
+                      height: 50,
+                      minWidth: double.infinity,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color: Color(0xff5AC18E),
+                      textColor: Colors.white,
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text("Yes"),
+                    )),
+                    SizedBox(width: 15),
+                    Expanded(
+                        child: FlatButton(
+                      height: 50,
+                      minWidth: double.infinity,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color: Color(0xff5AC18E),
+                      textColor: Colors.white,
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text("No"),
+                    )),
+                  ],
+                )
+              ],
+            ),
           );
         });
   }
@@ -61,26 +87,55 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         context: context,
         builder: (context) {
           return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
             title: Text(this.selectedNotes.length > 1
                 ? "${this.selectedNotes.length} Selected"
-                : this.selectedNotes[0].title.toUpperCase()),
-            content: Text(this.selectedNotes.length > 1
-                ? "Do you want to permanently delete the selected notes?"
-                : "Do you want to permanently delete this note?"),
-            actions: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: Text("Yes"),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: Text("No"),
-              ),
-            ],
+                : "DELETE NOTE"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(this.selectedNotes.length > 1
+                    ? "Do you want to permanently delete the selected notes?"
+                    : "Do you want to permanently delete this note?"),
+                SizedBox(
+                  height: 17,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: FlatButton(
+                      height: 50,
+                      minWidth: double.infinity,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color: Color(0xff5AC18E),
+                      textColor: Colors.white,
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text("Yes"),
+                    )),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                        child: FlatButton(
+                      height: 50,
+                      minWidth: double.infinity,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color: Color(0xff5AC18E),
+                      textColor: Colors.white,
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text("No"),
+                    )),
+                  ],
+                )
+              ],
+            ),
           );
         });
   }
@@ -150,38 +205,30 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return [
       this.selectedNotes.length == 0
           ? IconButton(
+              splashRadius: 17,
               onPressed: () {
                 this.getAllNotes();
               },
               icon: Icon(Icons.refresh))
           : Text(''),
       this.selectedNotes.length == 0
-          ? PopupMenuButton(
-              onSelected: (value) {
-                //handle sharing of the APK File here
+          ? IconButton(
+              splashRadius: 17,
+              onPressed: () {
+                //sharing of the uploaded link
               },
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    value: "share",
-                    child: Row(
-                      children: [
-                        Icon(Icons.share),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text("Share App")
-                      ],
-                    ),
-                  )
-                ];
-              },
+              icon: Icon(Icons.share),
             )
           : Text(''),
       this.selectedNotes.length == 1
           ? IconButton(
               onPressed: () {
-                //handle sharing content of the content
+                var note = this.selectedNotes[0];
+                var contentToShare = note.title +
+                    '\n' +
+                    'Note Taken On: ${Utils.formattedDate(note.noteDate)}\n' +
+                    note.content;
+                Share.share(contentToShare, subject: contentToShare);
               },
               icon: Icon(Icons.share))
           : Text(''),
@@ -257,13 +304,12 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 //function to override leading widget
   Widget leading() {
     return IconButton(
-      onPressed: () {
-        setState(() {
-          this.selectedNotes.clear();
-        });
-      },
-      icon: Icon(Icons.arrow_back),
-    );
+        onPressed: () {
+          setState(() {
+            this.selectedNotes.clear();
+          });
+        },
+        icon: Utils.backIcon());
   }
 
 //build searchBar widget
@@ -275,6 +321,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
           elevation: 25,
           shadowColor: Colors.black.withOpacity(0.25),
+          color: Colors.white,
           child: Padding(
               padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
               child: Row(
@@ -283,10 +330,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   SizedBox(
                     width: 7,
                   ),
-                  Icon(
-                    Icons.search,
-                    color: Colors.white.withOpacity(0.75),
-                  ),
+                  Icon(Icons.search, color: Theme.of(context).primaryColor),
                   SizedBox(
                     width: 7,
                   ),
@@ -309,14 +353,17 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         }
                       });
                     },
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(
+                        fontSize: 17, color: Theme.of(context).primaryColor),
                     decoration: InputDecoration(
                         hintText: "Search notes here",
+                        hintStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
                         border: InputBorder.none),
                   )),
                   IconButton(
                     splashRadius: 17,
-                    color: Colors.white.withOpacity(0.75),
+                    color: Theme.of(context).primaryColor,
                     onPressed: () {
                       this.searchText.text = "";
                       setState(() {
@@ -340,19 +387,19 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
               "Select All",
               style: TextStyle(fontSize: 17, color: Colors.grey),
             ),
-            Checkbox(
-              onChanged: (value) {
-                setState(() {
-                  this.isAllNotesSelected = value;
-                  if (isAllNotesSelected) {
-                    this.selectedNotes = [...this.notes];
-                  } else {
-                    this.selectedNotes = [];
-                  }
-                });
-              },
-              value: isAllNotesSelected,
-            )
+            SizedBox(
+              width: 17,
+            ),
+            Utils.checkBox(this.isAllNotesSelected, (value) {
+              setState(() {
+                this.isAllNotesSelected = value;
+                if (isAllNotesSelected) {
+                  this.selectedNotes = [...this.notes];
+                } else {
+                  this.selectedNotes = [];
+                }
+              });
+            })
           ],
         ));
   }
@@ -372,6 +419,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
           }
         },
         child: Scaffold(
+            backgroundColor: Theme.of(context).primaryColor,
             key: this.scaffoldKey,
             appBar: AppBar(
                 leading: this.selectedNotes.length > 0 ? this.leading() : null,
@@ -462,7 +510,9 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                                               .toUpperCase(),
                                                           style: TextStyle(
                                                               color: note.titleColor ==
-                                                                      "#f5f5f5"
+                                                                          "#f5f5f5" ||
+                                                                      note.titleColor ==
+                                                                          "#FFFFFF"
                                                                   ? Colors.black
                                                                   : Colors
                                                                       .white,
@@ -556,12 +606,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   ))
                           : Padding(
                               padding: EdgeInsets.only(top: 45),
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.white),
-                                ),
-                              ))
+                              child: Center(child: Utils.showPinnerDialog()))
                     ],
                   ),
                 ))));
