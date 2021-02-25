@@ -453,11 +453,26 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             leading: !this
                                                     .selectedNotes
                                                     .contains(note)
-                                                ? Icon(
-                                                    Icons.description,
-                                                    size: 35,
-                                                    color: Color(Utils.getColor(
-                                                        note.titleColor)),
+                                                ? Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: Center(
+                                                      child: Text(
+                                                          note.title[0]
+                                                              .toUpperCase(),
+                                                          style: TextStyle(
+                                                              color: note.titleColor ==
+                                                                      "#f5f5f5"
+                                                                  ? Colors.black
+                                                                  : Colors
+                                                                      .white,
+                                                              fontSize: 21)),
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                        color: Color(
+                                                            Utils.getColor(note
+                                                                .titleColor)),
+                                                        shape: BoxShape.circle),
                                                   )
                                                 : ScaleTransition(
                                                     scale: this.selectedIndex ==
