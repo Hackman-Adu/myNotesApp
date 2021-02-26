@@ -34,7 +34,6 @@ class AddNewNoteState extends State<AddNewNote> {
 //saving the note to the SQLite Database
   void saveNote() {
     if (this.formKey.currentState.validate()) {
-      print(this.getNoteDate());
       this.formKey.currentState.save();
       this.note.contentItalic = this.isContentItalic ? "true" : "false";
       this.note.contentBold = this.isContentBold ? "true" : "false";
