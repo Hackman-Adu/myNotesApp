@@ -59,38 +59,38 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Alice-Regular
+    - family: Manjari-Thin
       fonts:
-        - asset: assets/fonts/Alice-Regular.ttf
-    - family: Bentham-Regular
+        - asset: assets/fonts/Manjari-Thin.ttf
+    - family: BalooThambi2-Regular
       fonts:
-        - asset: assets/fonts/Bentham-Regular.ttf
-    - family: Bulletto Killa
+        - asset: assets/fonts/BalooThambi2-Regular.ttf
+    - family: AdventPro-Regular
       fonts:
-        - asset: assets/fonts/Bulletto Killa.ttf
-    - family: Gruppo-Regular
+        - asset: assets/fonts/AdventPro-Regular.ttf
+    - family: Cormorant-Regular
       fonts:
-        - asset: assets/fonts/Gruppo-Regular.ttf
-    - family: Niconne-Regular
+        - asset: assets/fonts/Cormorant-Regular.ttf
+    - family: Cantarell-Regular
       fonts:
-        - asset: assets/fonts/Niconne-Regular.ttf
-    - family: Pacifico-Regular
+        - asset: assets/fonts/Cantarell-Regular.ttf
+    - family: Manrope-Regular
       fonts:
-        - asset: assets/fonts/Pacifico-Regular.ttf
-    - family: Parisienne-Regular
+        - asset: assets/fonts/Manrope-Regular.ttf
+    - family: kalam-Regular
       fonts:
-        - asset: assets/fonts/Parisienne-Regular.ttf
-    - family: PoiretOne-Regular
+        - asset: assets/fonts/kalam-Regular.ttf
+    - family: Cardo-Regular
       fonts:
-        - asset: assets/fonts/PoiretOne-Regular.ttf
-    - family: Roboto-Black
+        - asset: assets/fonts/Cardo-Regular.ttf
+    - family: Archivo-Regular
       fonts:
-        - asset: assets/fonts/Roboto-Black.ttf
-    - family: Tangerine-Regular
+        - asset: assets/fonts/Archivo-Regular.ttf
+    - family: AnnieUseYourTelescope-Regular
       fonts:
-        - asset: assets/fonts/Tangerine-Regular.ttf
-    - family: OpenSans-Light
+        - asset: assets/fonts/AnnieUseYourTelescope-Regular.ttf
+    - family: HiMelody-Regular
       fonts:
-        - asset: assets/fonts/OpenSans-Light.ttf
+        - asset: assets/fonts/HiMelody-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

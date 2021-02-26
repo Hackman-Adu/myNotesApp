@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noteApp/models/fonts.dart';
+import 'package:noteApp/util/utils.dart';
 
 class SelectFont extends StatefulWidget {
   final String previousFontFamily;
@@ -17,7 +18,9 @@ class SelectFontState extends State<SelectFont> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
+        elevation: Utils.getToolbarElevation(),
         title: Text("Select Font"),
       ),
       body: ListView.separated(

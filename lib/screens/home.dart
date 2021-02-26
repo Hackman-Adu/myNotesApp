@@ -89,9 +89,29 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
-            title: Text(this.selectedNotes.length > 1
-                ? "${this.selectedNotes.length} Selected"
-                : "DELETE NOTE"),
+            title: Row(
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: Center(
+                    child: Icon(
+                      Icons.warning_rounded,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.redAccent, shape: BoxShape.circle),
+                ),
+                SizedBox(
+                  width: 7,
+                ),
+                Text(this.selectedNotes.length > 1
+                    ? "Delete Selected Notes"
+                    : "Delete Note")
+              ],
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -257,10 +277,13 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           this.notes.remove(note);
                           this.selectedNotes.remove(note);
                         });
+                      }).catchError((err) {
                         Utils.showSnackBar(
-                            "Notes successfully deleted", scaffoldKey);
+                            "Failed to delete some notes", scaffoldKey);
                       });
                     });
+                    Utils.showSnackBar(
+                        "Notes successfully deleted", scaffoldKey);
                   }
                 }
               },
@@ -422,17 +445,38 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
             backgroundColor: Theme.of(context).primaryColor,
             key: this.scaffoldKey,
             appBar: AppBar(
+                elevation: Utils.getToolbarElevation(),
                 leading: this.selectedNotes.length > 0 ? this.leading() : null,
                 title: Text(this.selectedNotes.length == 0
                     ? "My Notes"
                     : "${this.selectedNotes.length} Selected"),
                 actions: this.actionButons()),
-            floatingActionButton: FloatingActionButton(
+            floatingActionButton: FloatingActionButton.extended(
+              label: Row(
+                children: [
+                  Container(
+                    height: 25,
+                    width: 25,
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        size: 17,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                  ),
+                  SizedBox(
+                    width: 7,
+                  ),
+                  Text("Add New Note")
+                ],
+              ),
               backgroundColor: Color(0xff5AC18E),
               onPressed: () async {
                 this.getAddedNote();
               },
-              child: Icon(Icons.add),
             ),
             body: GestureDetector(
                 onTap: () {

@@ -17,10 +17,23 @@ class ViewNoteState extends State<ViewNote> {
   ViewNoteState({this.selectedNote});
   var scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  TextStyle getStyleFromNote() {
+  TextStyle getTitleStyleFromNote() {
     return TextStyle(
         color: Color(Utils.getColor(selectedNote.titleColor)),
         fontSize: double.parse(this.selectedNote.titleFontSize.toString()));
+  }
+
+  TextStyle getContentStyleFromNote() {
+    return TextStyle(
+        fontSize: double.parse(this.selectedNote.contentFontSize.toString()),
+        color: Color(Utils.getColor(this.selectedNote.contentColor)),
+        fontStyle: selectedNote.contentItalic == "true"
+            ? FontStyle.italic
+            : FontStyle.normal,
+        fontWeight: selectedNote.contentBold == "true"
+            ? FontWeight.bold
+            : FontWeight.normal,
+        fontFamily: selectedNote.contentFont ?? Utils.defaultFontFamily());
   }
 
   @override
@@ -29,6 +42,7 @@ class ViewNoteState extends State<ViewNote> {
         backgroundColor: Theme.of(context).primaryColor,
         key: this.scaffoldKey,
         appBar: AppBar(
+          elevation: Utils.getToolbarElevation(),
           title: Text("View Note"),
           actions: [
             IconButton(
@@ -60,10 +74,7 @@ class ViewNoteState extends State<ViewNote> {
               ListTile(
                   isThreeLine: true,
                   subtitle: Text(selectedNote.content,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: selectedNote.contentFont ??
-                              Utils.defaultFontFamily())),
+                      style: this.getContentStyleFromNote()),
                   title: Padding(
                     padding: EdgeInsets.only(bottom: 10),
                     child: Column(
@@ -71,7 +82,7 @@ class ViewNoteState extends State<ViewNote> {
                       children: [
                         Text(
                           this.selectedNote.title.toUpperCase(),
-                          style: this.getStyleFromNote(),
+                          style: this.getTitleStyleFromNote(),
                         ),
                         SizedBox(
                           height: 5,

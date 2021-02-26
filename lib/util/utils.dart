@@ -12,8 +12,12 @@ class Utils {
     return DateFormat('MMMM, dd yyyy hh:mm a').format(DateTime.parse(date));
   }
 
+  static double getToolbarElevation() {
+    return Platform.isAndroid ? 4 : 0;
+  }
+
   static String defaultFontFamily() {
-    return "OpenSans-Light";
+    return "Manjari-Thin";
   }
 
   static Widget backIcon() {
@@ -21,6 +25,43 @@ class Utils {
     var iosIcon = Icon(CupertinoIcons.back);
     var backIcon = Platform.isAndroid ? androidicon : iosIcon;
     return backIcon;
+  }
+
+  static Widget toolbarIcons(
+    IconData icon,
+    function,
+    BuildContext context,
+  ) {
+    return GestureDetector(
+        onTap: function,
+        child: Container(
+          height: 35,
+          width: 35,
+          decoration:
+              BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+          child: Center(
+            child: Icon(
+              icon,
+              size: 17,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ));
+  }
+
+  static Widget formattingContentToolbar(
+      IconData icon, function, BuildContext context,
+      {@required Color boxColor, @required iconColor}) {
+    return GestureDetector(
+        onTap: function,
+        child: Container(
+          height: 35,
+          width: 35,
+          decoration: BoxDecoration(color: boxColor, shape: BoxShape.circle),
+          child: Center(
+            child: Icon(icon, size: 17, color: iconColor),
+          ),
+        ));
   }
 
   static Widget showPinnerDialog() {
@@ -64,6 +105,20 @@ class Utils {
     );
     var checkbox = Platform.isAndroid ? androidCheckbox : iOSCheckbox;
     return checkbox;
+  }
+
+  static Widget smallContainerForFontSize(BuildContext context, size) {
+    return Container(
+        height: 20,
+        width: 20,
+        decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor, shape: BoxShape.circle),
+        child: Center(
+          child: Text(
+            size.round().toString(),
+            style: TextStyle(fontSize: 11, color: Colors.white),
+          ),
+        ));
   }
 
   static void showSnackBar(

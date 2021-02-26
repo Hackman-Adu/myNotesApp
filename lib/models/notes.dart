@@ -4,8 +4,12 @@ class Notes {
   String noteDate;
   String titleColor;
   int titleFontSize;
+  int contentFontSize;
   int noteID;
   String contentFont;
+  String contentItalic;
+  String contentBold;
+  String contentColor;
   Notes(
       {this.title,
       this.content,
@@ -13,7 +17,11 @@ class Notes {
       this.noteDate,
       this.titleColor,
       this.titleFontSize,
-      this.contentFont});
+      this.contentItalic,
+      this.contentBold,
+      this.contentFontSize,
+      this.contentFont,
+      this.contentColor});
 
   factory Notes.fromJSON(Map<String, dynamic> json) {
     return Notes(
@@ -21,7 +29,11 @@ class Notes {
         titleFontSize: json['titleFontSize'] ?? 15,
         titleColor: json['titleColor'] ?? '#f5f5f5',
         noteDate: json['noteDate'],
+        contentItalic: json['isItalic'],
+        contentBold: json['isBold'],
         contentFont: json['contentFont'],
+        contentColor: json['contentColor'],
+        contentFontSize: json['contentFontSize'],
         content: json['content'] ?? '',
         noteID: json['noteID']);
   }
@@ -34,7 +46,11 @@ class Notes {
       "noteDate": this.noteDate,
       "titleColor": this.titleColor,
       "titleFontSize": this.titleFontSize,
-      "contentFont": this.contentFont
+      "contentFont": this.contentFont,
+      "isBold": this.contentBold,
+      "isItalic": this.contentItalic,
+      "contentFontSize": this.contentFontSize,
+      "contentColor": this.contentColor
     };
     return map;
   }

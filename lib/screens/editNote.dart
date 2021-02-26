@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noteApp/controllers/noteController.dart';
 import 'package:noteApp/models/colors.dart';
+import 'package:noteApp/models/contentColors.dart';
 import 'package:noteApp/models/notes.dart';
+import 'package:noteApp/screens/selectContentColor.dart';
 import 'package:noteApp/util/utils.dart';
 
 import 'fontSelection.dart';
@@ -28,13 +30,17 @@ class EditNoteState extends State<EditNote> {
   var scaffoldKey = new GlobalKey<ScaffoldState>();
   var formKey = new GlobalKey<FormState>();
   double fontSize;
+  double contentfontSize;
   Color textColor;
   String selectedFontFamily;
   String titleColor = "";
+  String contentColor;
   NoteColors selectedColor;
+  bool isContentBold;
+  bool isContentItalic;
 
 //function to change fontsize
-  Future<double> changeFontSize(BuildContext context) {
+  Future<double> changeFontSize(BuildContext context, String applTo) {
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -53,11 +59,15 @@ class EditNoteState extends State<EditNote> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Utils.showSlider(
-                      this.fontSize,
+                      applTo == "title" ? this.fontSize : this.contentfontSize,
                       (value) {
                         setState(() {
                           this.setState(() {
-                            this.fontSize = value;
+                            if (applTo == "title") {
+                              this.fontSize = value;
+                            } else {
+                              this.contentfontSize = value;
+                            }
                           });
                         });
                       },
@@ -76,7 +86,9 @@ class EditNoteState extends State<EditNote> {
                           color: Color(0xff5AC18E),
                           textColor: Colors.white,
                           onPressed: () {
-                            Navigator.of(context).pop(this.fontSize);
+                            Navigator.of(context).pop(applTo == "title"
+                                ? this.fontSize
+                                : this.contentfontSize);
                           },
                           child: Text("Okay"),
                         )),
@@ -193,10 +205,14 @@ class EditNoteState extends State<EditNote> {
       this.noteToEdit.content = this.noteContent.text;
       this.noteToEdit.title = this.noteTitle.text;
       this.noteToEdit.titleColor = this.titleColor;
+      this.noteToEdit.contentColor = this.contentColor;
+      this.noteToEdit.contentItalic = this.isContentItalic ? "true" : "false";
+      this.noteToEdit.contentBold = this.isContentBold ? "true" : "false";
       this.noteToEdit.contentFont = this.selectedFontFamily;
       this.noteToEdit.titleFontSize =
           int.parse(this.fontSize.round().toString());
-      int.parse(this.fontSize.round().toString());
+      this.noteToEdit.contentFontSize =
+          int.parse(this.contentfontSize.round().toString());
       NotesController()
           .updateNote(this.noteToEdit.noteID, this.noteToEdit)
           .then((value) {
@@ -215,29 +231,78 @@ class EditNoteState extends State<EditNote> {
 //build formatting---content toolbar
   Widget contentToolBar() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 7),
+      padding: EdgeInsets.symmetric(vertical: 10),
       color: Color(0xff5AC18E),
       width: double.infinity,
       child: Row(
         children: [
-          IconButton(
-            splashRadius: 17,
-            onPressed: () async {
-              var family = await Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => SelectFont(
-                            previousFontFamily: this.selectedFontFamily,
-                          )));
-              setState(() {
-                this.selectedFontFamily = family ?? Utils.defaultFontFamily();
-              });
-            },
-            icon: Icon(
-              Icons.text_format,
-              size: 30,
-            ),
+          SizedBox(
+            width: 7,
           ),
+          Utils.toolbarIcons(Icons.text_format, () async {
+            var family = await Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => SelectFont(
+                          previousFontFamily: this.selectedFontFamily,
+                        )));
+            setState(() {
+              this.selectedFontFamily = family ?? Utils.defaultFontFamily();
+            });
+          }, context),
+          SizedBox(
+            width: 17,
+          ),
+          Utils.formattingContentToolbar(Icons.format_italic, () {
+            setState(() {
+              this.isContentItalic = !this.isContentItalic;
+            });
+          }, context,
+              boxColor: this.isContentItalic
+                  ? Theme.of(context).primaryColor
+                  : Colors.white,
+              iconColor: this.isContentItalic
+                  ? Colors.white
+                  : Theme.of(context).primaryColor),
+          SizedBox(
+            width: 17,
+          ),
+          Utils.formattingContentToolbar(Icons.format_bold, () {
+            setState(() {
+              this.isContentBold = !this.isContentBold;
+            });
+          }, context,
+              boxColor: this.isContentBold
+                  ? Theme.of(context).primaryColor
+                  : Colors.white,
+              iconColor: this.isContentBold
+                  ? Colors.white
+                  : Theme.of(context).primaryColor),
+          SizedBox(
+            width: 17,
+          ),
+          Utils.toolbarIcons(Icons.text_fields, () async {
+            var v = await this.changeFontSize(context, "content");
+            setState(() {
+              this.contentfontSize = v;
+            });
+          }, context),
+          SizedBox(
+            width: 7,
+          ),
+          Utils.smallContainerForFontSize(context, this.contentfontSize),
+          Expanded(
+              child: Utils.toolbarIcons(Icons.format_color_fill, () async {
+            ContentColors selectedColor = await Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => SelectContentColor(
+                          initialColor: this.contentColor,
+                        )));
+            setState(() {
+              this.contentColor = selectedColor.colorCodes;
+            });
+          }, context))
         ],
       ),
     );
@@ -246,49 +311,30 @@ class EditNoteState extends State<EditNote> {
 //build formatting toolbar
   Widget titleFormattingToolBar() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 7),
+      padding: EdgeInsets.symmetric(vertical: 10),
       color: Color(0xff5AC18E),
       width: double.infinity,
       child: Row(
         children: [
-          IconButton(
-            splashRadius: 17,
-            onPressed: () async {
-              var v = await this.changeFontSize(context);
-              setState(() {
-                this.fontSize = v;
-              });
-            },
-            icon: Icon(
-              Icons.text_fields,
-              size: 30,
-            ),
+          SizedBox(
+            width: 7,
           ),
-          Container(
-              height: 25,
-              width: 25,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  shape: BoxShape.circle),
-              child: Center(
-                child: Text(
-                  this.fontSize.round().toString(),
-                  style: TextStyle(fontSize: 13, color: Colors.white),
-                ),
-              )),
+          Utils.toolbarIcons(Icons.text_fields, () async {
+            var v = await this.changeFontSize(context, "title");
+            setState(() {
+              this.fontSize = v;
+            });
+          }, context),
+          SizedBox(
+            width: 7,
+          ),
+          Utils.smallContainerForFontSize(context, this.fontSize),
           SizedBox(
             width: 25,
           ),
-          IconButton(
-            splashRadius: 17,
-            onPressed: () {
-              this.changeFontColor(context);
-            },
-            icon: Icon(
-              Icons.format_color_fill,
-              size: 30,
-            ),
-          ),
+          Utils.toolbarIcons(Icons.format_color_fill, () {
+            this.changeFontColor(context);
+          }, context)
         ],
       ),
     );
@@ -303,8 +349,14 @@ class EditNoteState extends State<EditNote> {
         .colors
         .indexWhere((note) => note.colorCodes == this.noteToEdit.titleColor)];
     this.titleColor = this.noteToEdit.titleColor;
+    this.contentColor = this.noteToEdit.contentColor;
     this.textColor = Color(Utils.getColor(this.noteToEdit.titleColor));
+    this.isContentBold = this.noteToEdit.contentBold == "true" ? true : false;
+    this.isContentItalic =
+        this.noteToEdit.contentItalic == "true" ? true : false;
     this.fontSize = double.parse(this.noteToEdit.titleFontSize.toString());
+    this.contentfontSize =
+        double.parse(this.noteToEdit.contentFontSize.toString());
     this.noteTitle = new TextEditingController(text: this.noteToEdit.title);
     this.noteContent = new TextEditingController(text: this.noteToEdit.content);
   }
@@ -316,6 +368,7 @@ class EditNoteState extends State<EditNote> {
         backgroundColor: Theme.of(context).primaryColor,
         key: this.scaffoldKey,
         appBar: AppBar(
+          elevation: Utils.getToolbarElevation(),
           title: Text("Edit Note"),
         ),
         body: GestureDetector(
@@ -385,13 +438,20 @@ class EditNoteState extends State<EditNote> {
                                     return null;
                                   }
                                 },
-                                maxLength: 500,
+                                maxLength: 1500,
                                 maxLines: null,
                                 keyboardType: TextInputType.multiline,
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: this.contentfontSize,
+                                    fontStyle: this.isContentItalic
+                                        ? FontStyle.italic
+                                        : FontStyle.normal,
+                                    fontWeight: this.isContentBold
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
                                     fontFamily: selectedFontFamily,
-                                    color: Colors.white.withOpacity(0.85)),
+                                    color: Color(
+                                        Utils.getColor(this.contentColor))),
                                 decoration: InputDecoration(
                                     contentPadding: EdgeInsets.all(15),
                                     labelText: "Note content",

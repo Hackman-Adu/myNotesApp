@@ -10,8 +10,12 @@ class DatabaseConnection {
   String idCol = "noteID";
   String dateCol = "noteDate";
   String titleColorCol = "titleColor";
+  String contentColorCol = "contentColor";
   String titleFontSizeCol = "titleFontSize";
   String contentFontCol = "contentFont";
+  String isContentItalicCol = "isItalic";
+  String isContentBoldCol = "isBold";
+  String contentFontSizeCol = "contentFontSize";
   Database database;
   Future<Database> getDatabase() async {
     if (this.database != null) {
@@ -28,7 +32,7 @@ class DatabaseConnection {
     return await openDatabase(databasePath, version: 1,
         onCreate: (db, version) async {
       await db.execute(
-          "CREATE TABLE $table($idCol INTEGER PRIMARY KEY  NOT NULL,$titleCol TEXT,$contentCol TEXT,$dateCol TEXT,$titleColorCol TEXT,$titleFontSizeCol INTEGER,$contentFontCol TEXT)");
+          "CREATE TABLE $table($idCol INTEGER PRIMARY KEY  NOT NULL,$titleCol TEXT,$contentCol TEXT,$dateCol TEXT,$titleColorCol TEXT,$titleFontSizeCol INTEGER,$contentFontCol TEXT,$isContentBoldCol TEXT,$isContentItalicCol TEXT,$contentFontSizeCol INTEGER,$contentColorCol TEXT)");
     });
   }
 }
