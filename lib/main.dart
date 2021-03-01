@@ -13,7 +13,12 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           sliderTheme: SliderThemeData(
-              trackHeight: 1.0,
+              thumbColor: Colors.white,
+              activeTrackColor: Colors.white,
+              inactiveTrackColor: Colors.white.withOpacity(0.5),
+              disabledThumbColor: Colors.white.withOpacity(0.5),
+              disabledActiveTrackColor: Colors.white.withOpacity(0.5),
+              trackHeight: 0.50,
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 16)),
           brightness: Brightness.dark,
           primaryColor: Color(0xff0c2233),
