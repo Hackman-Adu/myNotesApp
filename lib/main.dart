@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
         title: 'My Notes',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          sliderTheme: SliderThemeData(
+              trackHeight: 1.0,
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 16)),
           brightness: Brightness.dark,
           primaryColor: Color(0xff0c2233),
           primaryColorDark: Color(0xff0c2233),

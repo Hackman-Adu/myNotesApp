@@ -21,7 +21,7 @@ class AddNewNoteState extends State<AddNewNote> {
   Color textColor;
   String titleColor = "";
   String contentColor = "#ffffff";
-  String selectedFontFamily = Utils.defaultFontFamily();
+  String selectedFontFamily = Utils.getDefaultFont();
   NoteColors selectedColor;
   double fontSize = 20.0;
   double contentFontSize = 21.0;
@@ -275,7 +275,7 @@ class AddNewNoteState extends State<AddNewNote> {
                           previousFontFamily: this.selectedFontFamily,
                         )));
             setState(() {
-              this.selectedFontFamily = family ?? Utils.defaultFontFamily();
+              this.selectedFontFamily = family ?? Utils.getDefaultFont();
             });
           }, context),
           SizedBox(
@@ -399,7 +399,7 @@ class AddNewNoteState extends State<AddNewNote> {
                                 style: TextStyle(
                                     fontSize: this.fontSize,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: Utils.defaultFontFamily(),
+                                    fontFamily: Utils.getDefaultFont(),
                                     color: this.textColor),
                                 decoration: InputDecoration(
                                     contentPadding: EdgeInsets.all(15),
@@ -448,7 +448,7 @@ class AddNewNoteState extends State<AddNewNote> {
                                     contentPadding: EdgeInsets.all(15),
                                     labelText: "Note content",
                                     labelStyle: TextStyle(
-                                        fontFamily: Utils.defaultFontFamily(),
+                                        fontFamily: Utils.getDefaultFont(),
                                         color: Colors.white.withOpacity(0.85)),
                                     hintText: "Note content"),
                               )),

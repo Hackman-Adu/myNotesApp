@@ -247,7 +247,7 @@ class EditNoteState extends State<EditNote> {
                           previousFontFamily: this.selectedFontFamily,
                         )));
             setState(() {
-              this.selectedFontFamily = family ?? Utils.defaultFontFamily();
+              this.selectedFontFamily = family ?? Utils.getDefaultFont();
             });
           }, context),
           SizedBox(
@@ -456,7 +456,7 @@ class EditNoteState extends State<EditNote> {
                                     contentPadding: EdgeInsets.all(15),
                                     labelText: "Note content",
                                     labelStyle: TextStyle(
-                                        fontFamily: Utils.defaultFontFamily(),
+                                        fontFamily: Utils.getDefaultFont(),
                                         color: Colors.white.withOpacity(0.85)),
                                     hintText: "Note content"),
                               )),

@@ -16,7 +16,7 @@ class Utils {
     return Platform.isAndroid ? 4 : 0;
   }
 
-  static String defaultFontFamily() {
+  static String getDefaultFont() {
     return "Manjari-Thin";
   }
 

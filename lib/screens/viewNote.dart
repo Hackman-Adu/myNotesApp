@@ -33,7 +33,7 @@ class ViewNoteState extends State<ViewNote> {
         fontWeight: selectedNote.contentBold == "true"
             ? FontWeight.bold
             : FontWeight.normal,
-        fontFamily: selectedNote.contentFont ?? Utils.defaultFontFamily());
+        fontFamily: selectedNote.contentFont ?? Utils.getDefaultFont());
   }
 
   @override
