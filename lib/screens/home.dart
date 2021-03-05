@@ -427,7 +427,86 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ));
   }
 
-//overriding the build method from the State
+  Widget buildListitle(Notes note) {
+    return ListTile(
+      onLongPress: () {
+        setState(() {
+          this.selectedIndex = this.notes.indexOf(note);
+          if (this.selectedNotes.length == 0) {
+            this.setAnimation(note);
+            this.selectedNotes.add(note);
+            isAllNotesSelected = false;
+          }
+        });
+      },
+      onTap: () {
+        setState(() {
+          this.selectedIndex = this.notes.indexOf(note);
+          if (this.selectedNotes.length > 0 &&
+              this.selectedNotes.contains(note)) {
+            this.selectedNotes.remove(note);
+            isAllNotesSelected = false;
+          } else if (this.selectedNotes.length > 0) {
+            this.setAnimation(note);
+            this.selectedNotes.add(note);
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ViewNote(
+                          selectedNote: note,
+                        )));
+          }
+        });
+      },
+      leading: !this.selectedNotes.contains(note)
+          ? Container(
+              height: 50,
+              width: 50,
+              child: Center(
+                child: Text(note.title[0].toUpperCase(),
+                    style: TextStyle(
+                        color: note.titleColor == "#f5f5f5" ||
+                                note.titleColor == "#FFFFFF"
+                            ? Colors.black
+                            : Colors.white,
+                        fontSize: 21)),
+              ),
+              decoration: BoxDecoration(
+                  color: Color(Utils.getColor(note.titleColor)),
+                  shape: BoxShape.circle),
+            )
+          : ScaleTransition(
+              scale: this.selectedIndex == this.notes.indexOf(note)
+                  ? this.animation
+                  : Tween<double>(begin: 1.0, end: 1.0).animate(this.curve),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Color(Utils.getColor(note.titleColor)),
+                    shape: BoxShape.circle),
+                height: 35,
+                child: Center(
+                  child: Icon(
+                    Icons.check,
+                    size: 17,
+                    color: note.titleColor == "#f5f5f5"
+                        ? Colors.black
+                        : Colors.white,
+                  ),
+                ),
+                width: 35,
+              )),
+      subtitle: Text(Utils.formattedDate(note.noteDate),
+          style: TextStyle(
+              fontSize: 13, color: Color(0xff5AC18E).withOpacity(0.95))),
+      title: Text(note.title.toUpperCase(),
+          style: TextStyle(
+              fontSize: 17,
+              color: Color(Utils.getColor(note.titleColor)).withOpacity(0.85))),
+    );
+  }
+
+//overriding the build method from the State.
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -448,7 +527,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 elevation: Utils.getToolbarElevation(),
                 leading: this.selectedNotes.length > 0 ? this.leading() : null,
                 title: Text(this.selectedNotes.length == 0
-                    ? "My Notes"
+                    ? "My Notes (${this.allNotes.length})"
                     : "${this.selectedNotes.length} Selected"),
                 actions: this.actionButons()),
             floatingActionButton: FloatingActionButton.extended(
@@ -498,124 +577,45 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     ...this.notes.map((note) {
                                       return Column(
                                         children: [
-                                          ListTile(
-                                            onLongPress: () {
-                                              setState(() {
-                                                this.selectedIndex =
-                                                    this.notes.indexOf(note);
-                                                if (this.selectedNotes.length ==
-                                                    0) {
-                                                  this.setAnimation(note);
-                                                  this.selectedNotes.add(note);
-                                                  isAllNotesSelected = false;
-                                                }
-                                              });
-                                            },
-                                            onTap: () {
-                                              setState(() {
-                                                this.selectedIndex =
-                                                    this.notes.indexOf(note);
-                                                if (this.selectedNotes.length >
-                                                        0 &&
-                                                    this
-                                                        .selectedNotes
-                                                        .contains(note)) {
-                                                  this
-                                                      .selectedNotes
-                                                      .remove(note);
-                                                  isAllNotesSelected = false;
-                                                } else if (this
-                                                        .selectedNotes
-                                                        .length >
-                                                    0) {
-                                                  this.setAnimation(note);
-                                                  this.selectedNotes.add(note);
-                                                } else {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ViewNote(
-                                                                selectedNote:
-                                                                    note,
-                                                              )));
-                                                }
-                                              });
-                                            },
-                                            leading: !this
-                                                    .selectedNotes
-                                                    .contains(note)
-                                                ? Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: Center(
-                                                      child: Text(
-                                                          note.title[0]
-                                                              .toUpperCase(),
-                                                          style: TextStyle(
-                                                              color: note.titleColor ==
-                                                                          "#f5f5f5" ||
-                                                                      note.titleColor ==
-                                                                          "#FFFFFF"
-                                                                  ? Colors.black
-                                                                  : Colors
-                                                                      .white,
-                                                              fontSize: 21)),
+                                          Dismissible(
+                                            background: Container(
+                                              color: Colors.redAccent,
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      "Delete",
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          color: Colors.white),
                                                     ),
-                                                    decoration: BoxDecoration(
-                                                        color: Color(
-                                                            Utils.getColor(note
-                                                                .titleColor)),
-                                                        shape: BoxShape.circle),
-                                                  )
-                                                : ScaleTransition(
-                                                    scale: this.selectedIndex ==
-                                                            this
-                                                                .notes
-                                                                .indexOf(note)
-                                                        ? this.animation
-                                                        : Tween<double>(
-                                                                begin: 1.0,
-                                                                end: 1.0)
-                                                            .animate(
-                                                                this.curve),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                          color: Color(Utils
-                                                              .getColor(note
-                                                                  .titleColor)),
-                                                          shape:
-                                                              BoxShape.circle),
-                                                      height: 35,
-                                                      child: Center(
-                                                        child: Icon(
-                                                          Icons.check,
-                                                          size: 17,
-                                                          color:
-                                                              note.titleColor ==
-                                                                      "#f5f5f5"
-                                                                  ? Colors.black
-                                                                  : Colors
-                                                                      .white,
-                                                        ),
-                                                      ),
-                                                      width: 35,
-                                                    )),
-                                            trailing: Icon(Icons.chevron_right),
-                                            subtitle: Text(
-                                                Utils.formattedDate(
-                                                    note.noteDate),
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Color(0xff5AC18E)
-                                                        .withOpacity(0.95))),
-                                            title: Text(
-                                                note.title.toUpperCase(),
-                                                style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Color(Utils.getColor(
-                                                            note.titleColor))
-                                                        .withOpacity(0.85))),
+                                                    SizedBox(
+                                                      width: 3,
+                                                    ),
+                                                    Icon(Icons.delete),
+                                                    SizedBox(
+                                                      width: 7,
+                                                    )
+                                                  ]),
+                                            ),
+                                            direction:
+                                                DismissDirection.endToStart,
+                                            onDismissed: (direction) {
+                                              NotesController()
+                                                  .deleteNote(note.noteID)
+                                                  .then((v) {
+                                                setState(() {
+                                                  this.notes.remove(note);
+                                                });
+                                              });
+                                            },
+                                            confirmDismiss: (value) {
+                                              return this
+                                                  .deletingNotes(context);
+                                            },
+                                            key: ObjectKey(note.noteID),
+                                            child: this.buildListitle(note),
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 20),
@@ -631,9 +631,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         child: Padding(
                                       padding: EdgeInsets.only(bottom: 20),
                                       child: Text(
-                                        this.notes.length > 1
-                                            ? "${this.notes.length} Notes Available"
-                                            : "${this.notes.length} Note Available",
+                                        "Swipe left to delete",
                                         style: TextStyle(
                                             fontSize: 13, color: Colors.grey),
                                       ),
