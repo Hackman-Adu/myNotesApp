@@ -8,6 +8,7 @@ import 'package:noteApp/screens/editNote.dart';
 import 'package:noteApp/screens/viewNote.dart';
 import 'package:noteApp/util/utils.dart';
 import 'package:share/share.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -577,44 +578,32 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     ...this.notes.map((note) {
                                       return Column(
                                         children: [
-                                          Dismissible(
-                                            background: Container(
-                                              color: Colors.redAccent,
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Text(
-                                                      "Delete",
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: Colors.white),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 3,
-                                                    ),
-                                                    Icon(Icons.delete),
-                                                    SizedBox(
-                                                      width: 7,
-                                                    )
-                                                  ]),
-                                            ),
-                                            direction:
-                                                DismissDirection.endToStart,
-                                            onDismissed: (direction) {
-                                              NotesController()
-                                                  .deleteNote(note.noteID)
-                                                  .then((v) {
-                                                setState(() {
-                                                  this.notes.remove(note);
-                                                });
-                                              });
-                                            },
-                                            confirmDismiss: (value) {
-                                              return this
-                                                  .deletingNotes(context);
-                                            },
-                                            key: ObjectKey(note.noteID),
+                                          Slidable(
+                                            secondaryActions: [
+                                              IconSlideAction(
+                                                  caption: 'Delete',
+                                                  color: Colors.red,
+                                                  icon: Icons.delete,
+                                                  onTap: () async {
+                                                    var value = await this
+                                                        .deletingNotes(context);
+                                                    if (value == true) {
+                                                      NotesController()
+                                                          .deleteNote(
+                                                              note.noteID)
+                                                          .then((v) {
+                                                        setState(() {
+                                                          this
+                                                              .notes
+                                                              .remove(note);
+                                                        });
+                                                      });
+                                                    }
+                                                  }),
+                                            ],
+                                            actionPane:
+                                                SlidableDrawerActionPane(),
+                                            actionExtentRatio: 0.25,
                                             child: this.buildListitle(note),
                                           ),
                                           Padding(
@@ -624,18 +613,6 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         ],
                                       );
                                     }).toList(),
-                                    SizedBox(
-                                      height: 27,
-                                    ),
-                                    Center(
-                                        child: Padding(
-                                      padding: EdgeInsets.only(bottom: 20),
-                                      child: Text(
-                                        "Swipe left to delete",
-                                        style: TextStyle(
-                                            fontSize: 13, color: Colors.grey),
-                                      ),
-                                    ))
                                   ],
                                 )
                               : Padding(
